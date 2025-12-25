@@ -1,13 +1,7 @@
-import { useEffect, useState } from "react";
+import { useMarkets } from "../state/hooks";
 
 export const Markets = () => {
-  const [markets, setMarkets] = useState<{ name: string }[]>();
-
-  useEffect(() => {
-    fetch("/api/v1/markets")
-      .then((response) => response.json())
-      .then((data) => setMarkets(data));
-  }, []);
+  const markets = useMarkets();
 
   return (
     <div>
