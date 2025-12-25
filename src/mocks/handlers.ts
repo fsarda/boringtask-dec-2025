@@ -1,22 +1,8 @@
-import { http, HttpResponse, type RequestHandler } from "msw";
+import { RequestHandler } from "msw";
+import { MARKET_API_HANDLER } from "./markets";
+import { ORDERS_API_HANDLER } from "./orders";
 
 export const DEFAULT_HANDLERS: RequestHandler[] = [
-  http.get("/api/v1/markets", () => {
-    return HttpResponse.json([
-      {
-        name: "BTC-USD",
-        syntheticName: "BTC",
-        syntheticPrecision: 5,
-        collateralName: "USD",
-        collateralPrecision: 1,
-      },
-      {
-        name: "ETH-USD",
-        syntheticName: "ETH",
-        syntheticPrecision: 4,
-        collateralName: "USD",
-        collateralPrecision: 2,
-      },
-    ]);
-  }),
+  ...MARKET_API_HANDLER,
+  ...ORDERS_API_HANDLER,
 ];
