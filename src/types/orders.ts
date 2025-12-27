@@ -11,7 +11,7 @@ export type Order = {
   hash: string;
 };
 
-export type CreateOrderRequest = Omit<Order, "id">;
+export type CreateOrderRequest = Omit<Order, "id" | "hash">;
 
 export enum CreateOrderResponseCode {
   "SUCCESS",
