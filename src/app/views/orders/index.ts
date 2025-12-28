@@ -1,2 +1,2 @@
-export { OrderForm } from "./OrderForm";
+export { OrderForm } from "./orderForm/OrderForm";
 export { OrdersBook } from "./OrdersBook";

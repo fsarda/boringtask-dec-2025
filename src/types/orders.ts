@@ -1,6 +1,9 @@
 import { Maybe } from "./common";
 
-export type Side = "buy" | "sell";
+export enum Side {
+  BUY = "buy",
+  SELL = "sell",
+} 
 
 export type Order = {
   id: string;
