@@ -11,16 +11,18 @@ function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <QueryProvider>
-        <div className="flex gap-8 rounded-3xl flex-col-reverse m-2 p-4 bg-background text-foreground sm:flex-row bg-secondary">
-          <ModeToggle />
-        </div>
-        <div className="flex gap-8 rounded-2xl flex-col-reverse w-screen h-screen p-4 bg-background text-foreground sm:flex-row ">
-          <Section title="Orders Book">
-            <OrdersBook />
-          </Section>
-          <Section title="Trading ticket">
-            <OrderForm />
-          </Section>
+        <div className="flex gap-4 flex-col ">
+          <div className="flex gap-8 p-1 bg-background text-foreground flex-row justify-end bg-secondary">
+            <ModeToggle />
+          </div>
+          <div className="flex gap-4 flex-col-reverse w-screen h-screen text-foreground sm:flex-row ">
+            <Section className="basis-full">
+              <OrdersBook />
+            </Section>
+            <Section className="basis-sm">
+              <OrderForm />
+            </Section>
+          </div>
         </div>
       </QueryProvider>
     </ThemeProvider>

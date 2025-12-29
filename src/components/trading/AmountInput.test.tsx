@@ -15,10 +15,12 @@ describe("AmountInput", () => {
   it("renders correctly", () => {
     render(
       <AmountInput
-        onCommit={() => {}}
+        onAmountChange={() => {}}
         initialValue={"10"}
         error={false}
-        market={mockMarket.syntheticName}
+        market={mockMarket}
+        onMarketChange={() => {}}
+        selectedInstrument={mockMarket.collateralName}
       />
     );
 
@@ -28,16 +30,18 @@ describe("AmountInput", () => {
 
   it("should prevent changes when focused", async () => {
     let initialValue = "10";
-    const onCommitSpy = vi.fn((value) => {
+    const onAmountChangeSpy = vi.fn((value) => {
       initialValue = value;
     });
 
     render(
       <AmountInput
-        onCommit={onCommitSpy}
+        onAmountChange={onAmountChangeSpy}
         initialValue={initialValue}
         error={false}
-        market={mockMarket.syntheticName}
+        market={mockMarket}
+        onMarketChange={() => {}}
+        selectedInstrument={mockMarket.collateralName}
       />
     );
 
@@ -54,16 +58,18 @@ describe("AmountInput", () => {
 
   it("should commit changes when blurred", async () => {
     let initialValue = "10";
-    const onCommitSpy = vi.fn((value) => {
+    const onAmountChangeSpy = vi.fn((value) => {
       initialValue = value;
     });
 
     render(
       <AmountInput
-        onCommit={onCommitSpy}
+        onAmountChange={onAmountChangeSpy}
         initialValue={initialValue}
         error={false}
-        market={mockMarket.syntheticName}
+        market={mockMarket}
+        onMarketChange={() => {}}
+        selectedInstrument={mockMarket.collateralName}
       />
     );
 
@@ -77,7 +83,7 @@ describe("AmountInput", () => {
     expect(screen.findByDisplayValue("20")).toBeDefined();
     expect(initialValue).toBe("10");
     await userEvent.click(label);
-    expect(onCommitSpy).toHaveBeenCalledWith("20");
+    expect(onAmountChangeSpy).toHaveBeenCalledWith("20");
     expect(initialValue).toBe("20");
     expect(screen.findByDisplayValue("20")).toBeDefined();
   });
@@ -85,10 +91,12 @@ describe("AmountInput", () => {
   it("should highlight error", async () => {
     render(
       <AmountInput
-        onCommit={() => {}}
+        onAmountChange={() => {}}
         initialValue={"10"}
         error
-        market={mockMarket.syntheticName}
+        market={mockMarket}
+        onMarketChange={() => {}}
+        selectedInstrument={mockMarket.collateralName}
       />
     );
 
@@ -97,16 +105,18 @@ describe("AmountInput", () => {
 
   it("should update if initial value changes and input is not focused", () => {
     let initialValue = "10";
-    const onCommitSpy = vi.fn((value) => {
+    const onAmountChangeSpy = vi.fn((value) => {
       initialValue = value;
     });
 
     render(
       <AmountInput
-        onCommit={onCommitSpy}
+        onAmountChange={onAmountChangeSpy}
         initialValue={initialValue}
         error={false}
-        market={mockMarket.syntheticName}
+        market={mockMarket}
+        onMarketChange={() => {}}
+        selectedInstrument={mockMarket.collateralName}
       />
     );
 

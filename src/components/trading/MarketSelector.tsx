@@ -9,11 +9,12 @@ import {
 } from "@/components/ui/select";
 import { Market } from "@/types/markets";
 import { Maybe } from "@/types/common";
+import { FieldWrapper } from "./FieldWrapper";
 
 type MarketSelectorProps = {
   selectedMarket: Maybe<Market>;
   onChange: (value: Market) => void;
-} & Pick<HTMLSelectElement, "name">;
+} & Pick<HTMLSelectElement, "name" | "id">;
 
 const MarketSelectorInternal = ({
   selectedMarket,
@@ -36,24 +37,26 @@ const MarketSelectorInternal = ({
   );
 
   return (
-    <Select
-      {...rest}
-      value={selectedMarket ? selectedMarket.name : undefined}
-      onValueChange={onChangeHandler}
-    >
-      <SelectTrigger>
-        <SelectValue placeholder="Select market" />
-      </SelectTrigger>
-      <SelectContent>
-        {markets?.map(({ name }) => (
-          <SelectItem key={name} id={name} value={name}>
-            {name}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <FieldWrapper label="Market">
+      <Select
+        {...rest}
+        value={selectedMarket?.name}
+        onValueChange={onChangeHandler}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Select market" />
+        </SelectTrigger>
+        <SelectContent>
+          {markets?.map(({ name }) => (
+            <SelectItem key={name} id={name} value={name}>
+              {name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </FieldWrapper>
   );
-};;
+};
 
 export const MarketSelector = ({
   selectedMarket,

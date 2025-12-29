@@ -5,7 +5,9 @@ const OrdersBookInternal = () => {
   const { data: orders } = useOrders();
 
   return orders.map((order) => (
-    <div key={order.id}>{JSON.stringify(order)}</div>
+    <div key={order.id} className="w-100">
+      {JSON.stringify(order)}
+    </div>
   ));
 };
 
