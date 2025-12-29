@@ -1,20 +1,30 @@
-import { Suspense } from "react";
-import { useMarketStats } from "../../../api-client/markets";
+import { Suspense, useEffect } from "react";
+import { useMarketStats } from "@/api-client/markets";
+import { TypographyP } from "@/components/typography-p";
+import { formatter } from "../orders/orderForm/utils";
+
+export type MarketPriceProps = {
+  selectedMarket: string;
+  onPriceChange: (price: number) => void;
+};
 
 const MarketPriceInternal = ({
   selectedMarket,
-}: {
-  selectedMarket: string;
-}) => {
-  const stat = useMarketStats(selectedMarket);
+  onPriceChange,
+}: MarketPriceProps) => {
+  const { data } = useMarketStats(selectedMarket);
 
-  return <div key={selectedMarket}>{stat.data.price}</div>;
+  useEffect(() => {
+    onPriceChange(data.price);
+  }, [data.price]);
+
+  return <TypographyP>{formatter(data.price, 5)}</TypographyP>;
 };
 
-export const MarketPrice = ({ selectedMarket }: { selectedMarket: string }) => {
-  return selectedMarket.trim().length > 0 ? (
+export const MarketPrice = (props: MarketPriceProps) => {
+  return props.selectedMarket.trim().length > 0 ? (
     <Suspense fallback={"Loading price..."}>
-      <MarketPriceInternal selectedMarket={selectedMarket} />;
+      <MarketPriceInternal {...props} />
     </Suspense>
   ) : null;
 };
