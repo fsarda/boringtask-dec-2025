@@ -1,27 +1,18 @@
-import { FormEventHandler, useReducer } from "react";
-import { Side } from "@/types/orders";
 import { useCreateOrderRequest } from "@/api-client/orders";
-import { FieldGroup } from "@/components/ui/field";
+import { useDispatchAction, useOrderStateForm } from "@/app/state";
 import { AmountInput } from "@/components/trading/AmountInput";
 import { MarketPrice } from "@/components/trading/MarketPrice";
 import { MarketSelector } from "@/components/trading/MarketSelector";
 import { SendOrderButton } from "@/components/trading/SendOrderButton";
 import { SideSelector } from "@/components/trading/SideSelector";
-import { TypographyP } from "@/components/typography-p";
-
-import { orderFormReducer } from "./state";
+import { FieldGroup } from "@/components/ui/field";
+import { Order, Side } from "@/types/orders";
+import { FormEventHandler } from "react";
 
 export const OrderForm = () => {
+  const state = useOrderStateForm();
+  const dispatch = useDispatchAction();
   const { isPending, mutate: send } = useCreateOrderRequest();
-  const [state, dispatch] = useReducer(orderFormReducer, {
-    market: undefined,
-    side: Side.BUY,
-    derivedAmount: "",
-    amount: "",
-    quantityValid: true,
-    instrument: "",
-    price: "",
-  });
   const disableSubmit = isPending || !state.quantityValid || !state.market;
 
   const handleSubmit: FormEventHandler = (event) => {
