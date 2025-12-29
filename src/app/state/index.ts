@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { OrdersContext, OrdersCreationContext } from "./context";
 import { OrderState } from "./ordersState";
 import { OrderFormState } from "./orderCreationState";
+import { Market } from "@/types/markets";
 
 export const useOrderStateForm = (): OrderFormState => {
   const selector = useContext(OrdersContext);
@@ -39,4 +40,12 @@ export const useMarketSpread = (): OrderState["spread"] => {
     : { lowestSellPrice: 0, higherBuyPrice: 0 };
 };
 
+export const useMarket = (): Market => {
+  const selector = useContext(OrdersContext);
+  const { market } = selector((state) => {
+    return state.form;
+  });
+
+  return market;
+};
 export const useDispatchAction = () => useContext(OrdersCreationContext);
