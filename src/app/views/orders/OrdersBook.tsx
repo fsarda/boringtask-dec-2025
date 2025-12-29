@@ -1,8 +1,8 @@
+import { useOrders } from "@/app/state";
 import { Suspense } from "react";
-import { useOrders } from "../../../api-client/orders";
 
 const OrdersBookInternal = () => {
-  const { data: orders } = useOrders();
+  const orders = useOrders();
 
   return orders.map((order) => (
     <div key={order.id} className="w-100">

@@ -1,5 +1,9 @@
-import { Side } from "../../../types/orders";
-import { OrderFormAction, orderFormReducer, OrderFormState } from "./state";
+import { Side } from "@/types/orders";
+import {
+  OrderFormState,
+  OrderFormAction,
+  orderFormReducer,
+} from "./orderCreationState";
 
 type Scenario = {
   scenarioName: string;

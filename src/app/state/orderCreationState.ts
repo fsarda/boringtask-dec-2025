@@ -7,6 +7,7 @@ import {
   fromSyntheticToCollateral,
   isValidPositiveNumber,
 } from "@/components/trading/utils";
+import { produce } from "immer";
 
 export type OrderFormState = {
   market: Maybe<Market>;
@@ -27,7 +28,7 @@ export type OrderFormAction =
   | { type: "change_price"; payload: number }
   | { type: "change_instrument"; payload: string };
 
-export const amountChangeReducer = (state: OrderFormState): OrderFormState => {
+export const amountChangeReducer = produce((state: OrderFormState) => {
   const { amount, market, price, instrument } = state;
   const isCollateralAmount = instrument === market?.collateralName;
 
@@ -48,51 +49,56 @@ export const amountChangeReducer = (state: OrderFormState): OrderFormState => {
       derivedPrecision
     );
     const formattedAmount = formatter(numberAmount, amountPrecision);
-    return {
-      ...state,
-      amount: formattedAmount,
-      derivedAmount: formattedDerivedAmount,
-      quantityValid: true,
-    };
+
+    state.amount = formattedAmount;
+    state.derivedAmount = formattedDerivedAmount;
+    state.quantityValid = true;
   } else {
-    return {
-      ...state,
-      quantityValid: false,
-    };
+    state.quantityValid = false;
   }
+});
+
+export const initialValue = {
+  market: undefined,
+  side: Side.BUY,
+  derivedAmount: "",
+  amount: "",
+  quantityValid: true,
+  instrument: "",
+  price: "",
 };
 
-export const orderFormReducer = (
-  state: OrderFormState,
-  action: OrderFormAction
-): OrderFormState => {
-  switch (action.type) {
-    case "change_side":
-      return { ...state, side: action.payload as Side };
-    case "change_market":
-      return amountChangeReducer({
-        ...state,
-        market: action.payload,
-        price: "",
-        derivedAmount: "",
-        instrument: action.payload.collateralName,
-      });
-    case "change_amount":
-      return amountChangeReducer({
-        ...state,
-        amount: action.payload,
-      });
-    case "change_instrument":
-      return amountChangeReducer({
-        ...state,
-        instrument: action.payload,
-      });
-    case "change_price":
-      return amountChangeReducer({
-        ...state,
-        price: formatter(action.payload, 5),
-      });
-    default:
-      return state;
-  }
-};
+export const orderFormReducer = produce(
+  (state: OrderFormState, action: OrderFormAction): OrderFormState => {
+    switch (action.type) {
+      case "change_side":
+        return { ...state, side: action.payload as Side };
+      case "change_market":
+        return amountChangeReducer({
+          ...state,
+          market: action.payload,
+          price: "",
+          derivedAmount: "",
+          instrument: action.payload.collateralName,
+        });
+      case "change_amount":
+        return amountChangeReducer({
+          ...state,
+          amount: action.payload,
+        });
+      case "change_instrument":
+        return amountChangeReducer({
+          ...state,
+          instrument: action.payload,
+        });
+      case "change_price":
+        return amountChangeReducer({
+          ...state,
+          price: formatter(action.payload, 5),
+        });
+      default:
+        return state;
+    }
+  },
+  initialValue
+);

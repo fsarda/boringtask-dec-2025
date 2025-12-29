@@ -1,6 +1,5 @@
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { APIError } from "./errors";
-import { hashObject } from "./hash";
 
 type RequestArgs = {
   key: string;
@@ -61,23 +60,3 @@ export const useRequest = <T>({
     isPending,
   };
 };
-
-type RequestResponseArgs = {
-  url: string;
-};
-export const useRequestResponse = <T extends {}, R>({ url }: RequestResponseArgs) =>
-  useMutation({
-    mutationFn: (body: T) => {
-      return hashObject(body).then((hash) => {
-        fetch(url, {
-          method: "post",
-          body: JSON.stringify({ ...body, hash }),
-        }).then((response) => {
-          if (response.ok) {
-            return response.json() as R;
-          }
-        });
-      });
-    },
-  });
-
