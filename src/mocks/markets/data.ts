@@ -25,14 +25,14 @@ const marketsTable: Record<string, Market> = {
     name: "BTC-EUR",
     syntheticName: "ETH",
     syntheticPrecision: 4,
-    collateralName: "USD",
+    collateralName: "EUR",
     collateralPrecision: 2,
   },
   "ETH-EUR": {
     name: "ETH-EUR",
     syntheticName: "ETH",
     syntheticPrecision: 4,
-    collateralName: "USD",
+    collateralName: "EUR",
     collateralPrecision: 2,
   },
 };
@@ -41,7 +41,7 @@ const marketStatsTable: Record<string, number> = Object.keys(
   marketsTable
 ).reduce(
   (acc, market) => {
-    acc[market] = faker.number.float({ min: 0, max: 1, fractionDigits: 5 });
+    acc[market] = faker.number.float({ min: 10, max: 20, fractionDigits: 5 });
     return acc;
   },
   {} as Record<string, number>
@@ -53,8 +53,8 @@ setInterval(() => {
   const randomMarket = faker.helpers.arrayElement(Object.keys(marketsTable));
   const isUp = faker.datatype.boolean();
   const priceTick = faker.number.float({
-    min: 0.001,
-    max: 0.01,
+    min: 0.05,
+    max: 0.55,
     fractionDigits: 5,
   });
 

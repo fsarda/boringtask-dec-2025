@@ -65,15 +65,8 @@ export const useRequest = <T>({
 type RequestResponseArgs = {
   url: string;
 };
-export const useRequestResponse = <T extends {}, R>({
-  url,
-}: RequestResponseArgs) => {
-  const {
-    isError,
-    isPending,
-    isSuccess,
-    mutate: send,
-  } = useMutation({
+export const useRequestResponse = <T extends {}, R>({ url }: RequestResponseArgs) =>
+  useMutation({
     mutationFn: (body: T) => {
       return hashObject(body).then((hash) => {
         fetch(url, {
@@ -88,5 +81,3 @@ export const useRequestResponse = <T extends {}, R>({
     },
   });
 
-  return { isError, isSuccess, isPending, send };
-};

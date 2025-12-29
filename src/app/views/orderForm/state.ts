@@ -6,35 +6,30 @@ import {
   fromCollateralToSynthetic,
   fromSyntheticToCollateral,
   isValidPositiveNumber,
-} from "./utils";
+} from "@/components/trading/utils";
 
 export type OrderFormState = {
   market: Maybe<Market>;
   price: string;
   side: Side;
-  synthetic_amount: string;
-  collateral_amount: string;
-  isCollateralAmount: boolean;
+  amount: string;
+  derivedAmount: string;
+  instrument: string;
+  //This could be dismissed as it can be
+  // derivated from other fields, keeping just for commodity
   quantityValid: boolean;
-  marketValid: boolean;
 };
 
 export type OrderFormAction =
-  | { type: "change_synthetic_amount"; payload: string }
-  | { type: "change_collateral_amount"; payload: string }
+  | { type: "change_amount"; payload: string }
   | { type: "change_side"; payload: Side }
   | { type: "change_market"; payload: Market }
-  | { type: "change_price"; payload: number };
+  | { type: "change_price"; payload: number }
+  | { type: "change_instrument"; payload: string };
 
 export const amountChangeReducer = (state: OrderFormState): OrderFormState => {
-  const {
-    synthetic_amount,
-    collateral_amount,
-    market,
-    price,
-    isCollateralAmount,
-  } = state;
-  const amount = isCollateralAmount ? collateral_amount : synthetic_amount;
+  const { amount, market, price, instrument } = state;
+  const isCollateralAmount = instrument === market?.collateralName;
 
   if (isValidPositiveNumber(amount) && isValidPositiveNumber(price)) {
     const derivateAmountCalc = isCollateralAmount
@@ -55,19 +50,13 @@ export const amountChangeReducer = (state: OrderFormState): OrderFormState => {
     const formattedAmount = formatter(numberAmount, amountPrecision);
     return {
       ...state,
-      collateral_amount: isCollateralAmount
-        ? formattedAmount
-        : formattedDerivedAmount,
-      synthetic_amount: !isCollateralAmount
-        ? formattedAmount
-        : formattedDerivedAmount,
+      amount: formattedAmount,
+      derivedAmount: formattedDerivedAmount,
       quantityValid: true,
     };
   } else {
     return {
       ...state,
-      collateral_amount: isCollateralAmount ? state.collateral_amount : "",
-      synthetic_amount: !isCollateralAmount ? state.synthetic_amount : "",
       quantityValid: false,
     };
   }
@@ -75,32 +64,34 @@ export const amountChangeReducer = (state: OrderFormState): OrderFormState => {
 
 export const orderFormReducer = (
   state: OrderFormState,
-  { type, payload }: OrderFormAction
+  action: OrderFormAction
 ): OrderFormState => {
-  switch (type) {
+  switch (action.type) {
     case "change_side":
-      return { ...state, side: payload as Side };
+      return { ...state, side: action.payload as Side };
     case "change_market":
       return amountChangeReducer({
         ...state,
-        market: payload,
+        market: action.payload,
         price: "",
-        marketValid: true,
+        derivedAmount: "",
+        instrument: action.payload.collateralName,
       });
-    case "change_collateral_amount":
+    case "change_amount":
       return amountChangeReducer({
         ...state,
-        collateral_amount: payload,
-        isCollateralAmount: true,
+        amount: action.payload,
       });
-    case "change_synthetic_amount":
+    case "change_instrument":
       return amountChangeReducer({
         ...state,
-        synthetic_amount: payload,
-        isCollateralAmount: false,
+        instrument: action.payload,
       });
     case "change_price":
-      return amountChangeReducer({ ...state, price: formatter(payload, 5) });
+      return amountChangeReducer({
+        ...state,
+        price: formatter(action.payload, 5),
+      });
     default:
       return state;
   }
