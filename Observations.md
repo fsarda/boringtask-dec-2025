@@ -14,4 +14,6 @@ Being a small(ish) application the following decisions were made:
 
 - Left several TODO's with comments on things i would put more effort in. Not proud of using `any` type in the app reducer but did not have time to get to the bottom of the types issues
 - Use correctly selectors to avoid unnecessary re-renderings
-- Move market and spread components to the header as they rule the blotter and the form
+- Move market and price components to the header as they rule the blotter and the form
+- Toasts with notification handling result of failing orders (tho right now, none will fail)
+ 
